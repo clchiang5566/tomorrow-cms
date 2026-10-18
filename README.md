@@ -1,61 +1,91 @@
-# 🚀 Getting started with Strapi
+# tomorrow-cms
 
-Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
+Strapi v5 CMS for Tomorrow website.
 
-### `develop`
+## Local development
 
-Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
+1. Install dependencies
 
+```bash
+npm install
 ```
+
+2. Create env file
+
+```bash
+cp .env.example .env
+```
+
+3. Start dev server
+
+```bash
 npm run develop
-# or
-yarn develop
 ```
 
-### `start`
+- Admin panel: `http://localhost:1337/admin`
+- API base: `http://localhost:1337/api`
 
-Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
+## Deploy-ready checklist
 
-```
-npm run start
-# or
-yarn start
-```
+- [ ] All required content types/components are saved in Content-Type Builder
+- [ ] Content in Content Manager is **Published** (not Draft)
+- [ ] Production database is configured (recommended: Postgres)
+- [ ] All env vars are set on hosting platform
+- [ ] API permissions are configured for frontend usage
+- [ ] `npm run build` succeeds
+- [ ] `npm run start` runs with production env
 
-### `build`
+## Required environment variables
 
-Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
+Minimum required:
 
-```
+- `HOST`
+- `PORT`
+- `APP_KEYS`
+- `API_TOKEN_SALT`
+- `ADMIN_JWT_SECRET`
+- `TRANSFER_TOKEN_SALT`
+- `JWT_SECRET`
+- `ENCRYPTION_KEY`
+- `DATABASE_CLIENT`
+
+Recommended for production:
+
+- `PUBLIC_URL` (example: `https://cms.yourdomain.com`)
+- `IS_PROXIED=true` (for reverse proxy / platform ingress)
+- `DATABASE_URL` (when using Postgres)
+- `DATABASE_SSL` and `DATABASE_SSL_REJECT_UNAUTHORIZED` (platform dependent)
+
+## Production commands
+
+```bash
 npm run build
-# or
-yarn build
+npm run start
 ```
 
-## ⚙️ Deployment
+## API permission setup (for frontend)
 
-Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
+1. Go to `Settings -> Users & Permissions Plugin -> Roles -> Public`
+2. Enable only required `find` / `findOne` permissions per content type
+3. Save and test endpoint from frontend
 
+## If Content Manager shows `Policy Failed`
+
+Most common cause is missing admin role permissions.
+
+1. Go to `Settings -> Administration Panel -> Roles`
+2. Open your role (Editor/Author/Custom role)
+3. Enable needed Content Manager permissions (`Read`, `Create`, `Update`, `Delete`, `Publish` as needed)
+4. Save and sign out/in again
+
+If issue remains, clear admin build cache and rebuild:
+
+```bash
+rm -rf .strapi dist
+npm run develop
 ```
-yarn strapi deploy
-```
 
-## 📚 Learn more
+## Notes
 
-- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
-- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
-- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
-- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
-- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
-
-Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
-
-## ✨ Community
-
-- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
-- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
-- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
-
----
-
-<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
+- This project can run with SQLite for local development.
+- Use Postgres in production for stability and backup strategy.
