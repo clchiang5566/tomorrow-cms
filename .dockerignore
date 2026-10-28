@@ -1,0 +1,14 @@
+.git
+.gitignore
+.env
+.env.*
+.strapi
+.tmp
+dist
+build
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+Dockerfile*
+README.md

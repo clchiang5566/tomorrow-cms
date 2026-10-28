@@ -23,23 +23,41 @@ const deniedTypes = [
   'application/x-mach-binary',
 ];
 
-const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin => ({
-  'users-permissions': {
-    config: {
-      jwtManagement: 'refresh',
-      sessions: {
-        httpOnly: true,
+const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin => {
+  const s3Bucket = env('AWS_S3_BUCKET');
+
+  return {
+    'users-permissions': {
+      config: {
+        jwtManagement: 'refresh',
+        sessions: {
+          httpOnly: true,
+        },
       },
     },
-  },
-  upload: {
-    config: {
-      security: {
-        allowedTypes: allowedMediaTypes,
-        deniedTypes,
+    upload: {
+      config: {
+        provider: s3Bucket ? '@strapi/provider-upload-aws-s3' : 'local',
+        ...(s3Bucket && {
+          providerOptions: {
+            baseUrl: env('AWS_S3_BASE_URL'),
+            rootPath: env('AWS_S3_ROOT_PATH', ''),
+            s3Options: {
+              region: env('AWS_REGION', 'ap-southeast-2'),
+              params: {
+                Bucket: s3Bucket,
+                ACL: undefined,
+              },
+            },
+          },
+        }),
+        security: {
+          allowedTypes: allowedMediaTypes,
+          deniedTypes,
+        },
       },
     },
-  },
-});
+  };
+};
 
 export default config;

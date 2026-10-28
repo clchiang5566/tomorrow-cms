@@ -16,6 +16,11 @@
     },
     "subtitle": {
       "type": "string"
+    },
+    "heroImage": {
+      "type": "component",
+      "repeatable": false,
+      "component": "common.image"
     }
   }
 }

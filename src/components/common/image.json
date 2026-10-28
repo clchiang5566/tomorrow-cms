@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_common_images",
+  "info": {
+    "displayName": "Image"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "altText": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}
